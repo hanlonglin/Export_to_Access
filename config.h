@@ -4,8 +4,6 @@
 #include <QDebug>
 
 
-static const QString CONFIG_FILE="config.ini";
-
 static const QString CONFIG_SOURCE_SECTION="Source";
 static const QString CONFIG_SOURCE_DBTYPE="dbtype";
 static const QString CONFIG_SOURCE_HOST="host";
@@ -27,13 +25,17 @@ static const QString CONFIG_TARGET_COLUMNS="columns";
 
 
 
-
 class config
 {
 public:
     config();
 
+    static QString CONFIG_FILE; //全局变量
+
     void readConfig();
+
+    void setFile(QString file);
+
 
     QString source_dbtype;
     QString source_host;

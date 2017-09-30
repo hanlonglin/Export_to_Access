@@ -5,9 +5,12 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QSqlRecord>
+#include <QSqlField>
 #include <QDebug>
 #include <QObject>
 #include <QThread>
+#include <QVariant>
 
 #include "config.h"
 

@@ -1,12 +1,21 @@
 ﻿#include "config.h"
 
+QString config::CONFIG_FILE="config.ini";
+
 config::config()
 {
     readConfig();
 }
+
+
 void config::readConfig()
 {
-    QSettings *setting =new QSettings(CONFIG_FILE,QSettings::IniFormat);
+    if(config::CONFIG_FILE.isEmpty())
+    {
+        qDebug()<<"config is null";
+        config::CONFIG_FILE="config.ini";
+    }
+    QSettings *setting =new QSettings(config::CONFIG_FILE,QSettings::IniFormat);
     setting->setIniCodec("GBK");
     source_dbtype=setting->value(CONFIG_SOURCE_SECTION+"/"+CONFIG_SOURCE_DBTYPE).toString();
     source_host=setting->value(CONFIG_SOURCE_SECTION+"/"+CONFIG_SOURCE_HOST).toString();
@@ -24,4 +33,9 @@ void config::readConfig()
     target_tablename=setting->value(CONFIG_TARGET_SECTION+"/"+CONFIG_TARGET_TABLENAME).toString();
     target_columns=setting->value(CONFIG_TARGET_SECTION+"/"+CONFIG_TARGET_COLUMNS).toString().split("|");
     delete setting;
+}
+
+void config::setFile(QString file)
+{
+    config::CONFIG_FILE=file;
 }

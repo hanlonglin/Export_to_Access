@@ -93,10 +93,10 @@ void DatabaseTools::Export_to_Access()
     }
     emit sendMsg(0,"connect source db '"+cfg.source_dbname+"' success.");
     QSqlQuery source_query(source_DB);
-//    qDebug()<<"source_query.isActive() "<<source_query.isActive();
-//    qDebug()<<"source_query.isValid() "<<source_query.isValid();
-//    qDebug()<<"source_query.isSelect() "<<source_query.isSelect();
-//    qDebug()<<"source_query.isNull(0) "<<source_query.isNull(0);
+    //    qDebug()<<"source_query.isActive() "<<source_query.isActive();
+    //    qDebug()<<"source_query.isValid() "<<source_query.isValid();
+    //    qDebug()<<"source_query.isSelect() "<<source_query.isSelect();
+    //    qDebug()<<"source_query.isNull(0) "<<source_query.isNull(0);
 
     ret=connect_target_DB();
     if(!ret)
@@ -136,7 +136,22 @@ void DatabaseTools::Export_to_Access()
         search_list.clear();
         for(int i=0;i<count;i++)
         {
+//            qDebug()<<source_query.record().field(i).name()<<" 's type:"<<source_query.record().field(i).type();
+//            qDebug()<<"QString type:"<<QVariant::Type::String;
+//            qDebug()<<"Date type:"<<QVariant::Type::Date;
+
             QString value=source_query.value(i).toString();
+            //判断空值情况
+            if(value.isEmpty())
+            {
+//                if(source_query.record().field(i).type()==QVariant::Type::Int)
+//                    value="0";
+//                else
+                    value="null";
+            }else{
+                value="'"+value+"'";
+            }
+
             search_list.push_back(value);
             if(i==(count-1))  //查询完一列
             {
@@ -147,10 +162,10 @@ void DatabaseTools::Export_to_Access()
                     if(j!=(count-1))
                     {
                         columns.append(cfg.target_columns.at(j)).append(",");
-                        values.append("'"+search_list.at(j)+"'").append(",");
+                        values.append(search_list.at(j)).append(",");
                     }else{
                         columns.append(cfg.target_columns.at(j));
-                        values.append("'"+search_list.at(j)+"'");
+                        values.append(search_list.at(j));
                     }
 
                 }
@@ -162,7 +177,13 @@ void DatabaseTools::Export_to_Access()
                 {
                     emit sendMsg(-1,"exec "+insert_sql+" fail!"+target_query.lastError().text());
                     fail_insert++;
-                    //return ;
+
+                    //结束
+                    emit sendMsg(1,"Export finished. "+QString::number(success_insert)+" records success, "+QString::number(fail_insert)+" records fail.");
+                    //关闭数据库
+                    close_source_DB();
+                    close_target_DB();
+                    return ;
                 }else
                     success_insert++;
 

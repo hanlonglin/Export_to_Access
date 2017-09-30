@@ -20,6 +20,7 @@ class ConfigWindow : public QWidget
 public:
     explicit ConfigWindow(QWidget *parent = 0);
     ~ConfigWindow();
+    config cfg;
 
 private:
     Ui::ConfigWindow *ui;

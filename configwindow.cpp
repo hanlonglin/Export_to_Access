@@ -6,7 +6,7 @@ ConfigWindow::ConfigWindow(QWidget *parent) :
     ui(new Ui::ConfigWindow)
 {
     ui->setupUi(this);
-    setWindowTitle("--config--");
+    //setWindowTitle("--config--");
 
     showSlot();
 
@@ -22,10 +22,11 @@ ConfigWindow::~ConfigWindow()
 /*显示*/
 void ConfigWindow::showSlot()
 {
-    QFile file(CONFIG_FILE);
+    cfg.readConfig();
+    QFile file(config::CONFIG_FILE);
     if(!file.open(QIODevice::ReadOnly))
     {
-       QMessageBox::information(this,"",CONFIG_FILE+" open fail!");
+       QMessageBox::information(this,"",config::CONFIG_FILE+" open fail!");
        return ;
     }
     QTextStream in(&file);
@@ -36,10 +37,10 @@ void ConfigWindow::showSlot()
 /*保存*/
 void ConfigWindow::saveSlot()
 {
-    QFile file(CONFIG_FILE);
+    QFile file(config::CONFIG_FILE);
     if(!file.open(QIODevice::ReadWrite|QIODevice::Truncate|QIODevice::Text))
     {
-       QMessageBox::information(this,"",CONFIG_FILE+" open fail!");
+       QMessageBox::information(this,"",config::CONFIG_FILE+" open fail!");
        return ;
     }
     QTextStream out(&file);
@@ -57,5 +58,6 @@ void ConfigWindow::closeEvent(QCloseEvent *event)
 /*打开时函数*/
 void ConfigWindow::showEvent(QShowEvent *event)
 {
+    setWindowTitle(config::CONFIG_FILE);
     showSlot();
 }

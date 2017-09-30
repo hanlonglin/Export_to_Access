@@ -8,7 +8,7 @@ QT       += core gui
 QT       += sql
 RC_ICONS = access.ico
 
-VERSION = 1.0.0.2
+VERSION = 1.0.0.4
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
